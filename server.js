@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const database = require('./database/models');
 const towerRoute = require('./api/tower')
+const officeRoute = require('./api/office')
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Initialize db
 database.initialize();
 app.use('/tower',towerRoute); //for handling tower related APIs
+app.use('/office',officeRoute); //for handling tower related APIs
 // set port, listen for requests
 const PORT = process.env.PORT || 3041;
 app.listen(PORT, () => {

@@ -21,6 +21,19 @@ class Office extends Model {
     });
   }
 
+ /**
+   * Creates a new office 
+   * @param {String} Name
+   * @param {String} Number
+   */
+  static async createOffice({
+    name, number, towerId
+  }) {
+    return Office.create({
+      name, number, towerId
+    });
+  }
+
   /**
    * @ignore
    */
