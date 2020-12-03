@@ -8,3 +8,4 @@
       paranoid: true
     }
   };
+  exports.JWT_SECRET = 'jc:Q911cNW,7-")36i)p}\'9]d?R>C\\';

@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const database = require('./database/models');
 const towerRoute = require('./api/tower')
 const officeRoute = require('./api/office')
+const authRoute = require('./api/auth')
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Initialize db
 database.initialize();
+app.use('/auth',authRoute); //for handling authentication
 app.use('/tower',towerRoute); //for handling tower related APIs
 app.use('/office',officeRoute); //for handling tower related APIs
 // set port, listen for requests

@@ -3,8 +3,9 @@ const router = express.Router()
 const towersCtrl = require('../../controllers/towers');
 const { models } = require('../../database/models');
 const { parseOptionsReq } = require('../../lib/utils');
+const authenticate = require('../../lib/middlewares/authenticate');
 
-router.post('/', async (req, res) => {
+router.post('/', authenticate(), async (req, res) => {
     const { name, lat, long, rate } = req.body;
     await towersCtrl.createTower({ name, lat, long, rate })
         .then(data => {
@@ -34,7 +35,7 @@ router.get('/', async (req, res) => {
     });
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticate(), async (req, res) => {
     const towerId = req.params.id;
     await models.Tower.destroy({
         where: {
