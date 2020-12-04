@@ -51,6 +51,10 @@ class Tower extends Model {
       },
       floors: {
         type: DataTypes.INTEGER,
+        default: 1 // Default total floors to 1
+      },
+      officeCount: {
+        type: DataTypes.INTEGER,
         default: 0 // Default no of offices to zero
       }
     }, {
@@ -66,11 +70,27 @@ class Tower extends Model {
    * @param {Geometry} Long
    */
   static async createTower({
-    name, rate, lat, long
+    name, rate, lat, long, floors
   }) {
     return Tower.create({
-      name, rate, lat, long
+      name, rate, lat, long, floors, officeCount:0 
     });
+  }
+
+  /**
+   * List towers based on the query params
+   * @param {Object} options
+   * @param {Object} where
+   */
+  static async listTowers({
+    options
+  }) {
+    return await Tower.findAll({
+      offset: options.offset || 0,
+      limit: options.limit || 10,
+      where: options.where || {},
+      order: options.order || []
+    })
   }
 
   /**

@@ -21,6 +21,10 @@ module.exports = {
       },
       floors: {
         type: Sequelize.INTEGER,
+        default: 1 // Default no of floors to one
+      },
+      officeCount: {
+        type: Sequelize.INTEGER,
         default: 0 // Default no of offices to zero
       },
       createdAt: {

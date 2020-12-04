@@ -1,4 +1,21 @@
 const { Model } = require('sequelize');
+const { models } = require('../../database/models');
+
+const afterCreate = async (office, options) => {
+  const tower = await office.getTower();
+  if (tower) {
+    const offices = tower.officeCount + 1;
+    await models.Tower.update({
+      officeCount: offices
+    }, {
+      where: {
+        id: tower.id
+      },
+      transaction: options.transaction
+    });
+  }
+  return office;
+};
 
 class Office extends Model {
   static init(sequelize, DataTypes) {
@@ -17,15 +34,19 @@ class Office extends Model {
         type: DataTypes.STRING
       }
     }, {
-      sequelize
+      sequelize,
+      hooks: {
+        afterCreate // Update office count for the tower
+      },
     });
   }
 
- /**
-   * Creates a new office 
-   * @param {String} Name
-   * @param {String} Number
-   */
+  /**
+    * Creates a new office 
+    * @param {String} Name
+    * @param {String} Number
+    * @param {Number} TowerId
+    */
   static async createOffice({
     name, number, towerId
   }) {
