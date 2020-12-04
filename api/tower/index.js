@@ -4,10 +4,27 @@ const towersCtrl = require('../../controllers/towers');
 const { models } = require('../../database/models');
 const { parseOptionsReq } = require('../../lib/utils');
 const authenticate = require('../../lib/middlewares/authenticate');
+const redis = require('redis');
+const { promisify } = require('util');
+const config = require('../../config');
+
+let redisClient;
+let get;
+let set;
+if (config.redis) {
+    redisClient = redis.createClient(config.redis);
+    get = promisify(redisClient.get).bind(redisClient);
+    set = promisify(redisClient.set).bind(redisClient);
+}
+else {
+    console.log('WARNING: Redis is not configured and no results will be cached');
+}
 
 router.post('/', authenticate(), async (req, res) => {
-    const { name, lat, long, rate } = req.body;
-    await towersCtrl.createTower({ name, lat, long, rate })
+    const { name, lat, long, rate, floors } = req.body;
+    // invalidate redis cache for listint as tower list is updated
+    redisClient.flushall();
+    await towersCtrl.createTower({ name, lat, long, rate, floors })
         .then(data => {
             res.send(data);
         }).catch(err => {
@@ -20,23 +37,22 @@ router.post('/', authenticate(), async (req, res) => {
 
 router.get('/', async (req, res) => {
     const options = parseOptionsReq(req);
-    await models.Tower.findAll({
-        offset: options.offset || 0,
-        limit: options.limit || 10,
-        where: options.where || {},
-        order: options.order || []
-    }).then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving towers."
+    const showWithOffices = req.query.show_with_offices;
+    await towersCtrl.listTowers({ options, showWithOffices })
+        .then(data => {
+            res.send(data);
+        }).catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while getting tower list"
+            });
         });
-    });
 });
 
 router.delete('/:id', authenticate(), async (req, res) => {
     const towerId = req.params.id;
+    // invalidate redis cache for listing as tower list is updated
+    redisClient.flushall();
     await models.Tower.destroy({
         where: {
             id: towerId
