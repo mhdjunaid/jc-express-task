@@ -18,6 +18,20 @@ router.post('/', authenticate(), async (req, res) => {
     });
 });
 
+router.put('/:id', authenticate(), async (req, res) => {
+  const officeId = req.params.id;
+  req.office = await officesCtrl.getOffice(officeId); // get office model to be updated
+  await officesCtrl.editOffice({ office: req.office, ...req.body })
+    .then(data => {
+      res.send(data);
+    }).catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while updating office"
+      });
+    });
+});
+
 router.get('/', async (req, res) => {
   const options = parseOptionsReq(req);
   await models.Office.findAll({
@@ -36,25 +50,21 @@ router.get('/', async (req, res) => {
 });
 
 router.delete('/:id', authenticate(), async (req, res) => {
-  const towerId = req.params.id;
-  await models.Tower.destroy({
-    where: {
-      id: towerId
-    }
-  }).then(count => {
+  const officeId = req.params.id;
+  await officesCtrl.removeOffice({ officeId }).then(count => {
     if (count == 1) {
       res.send({
         message: "Office was deleted successfully!"
       });
     } else {
       res.send({
-        message: `Cannot delete Office with id=${towerId}.`
+        message: err.message || `Cannot delete Office with id=${officeId}.`
       });
     }
   })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete Office with id=" + towerId
+        message: "Could not delete Office with id=" + officeId
       });
     });
 });

@@ -121,6 +121,22 @@ class Tower extends Model {
   }
 
   /**
+    * Edit the current tower
+    * @param {Object} params
+    */
+  async editTower({
+    name, rate, lat, long, floors, location
+  }) {
+    this.name = name || this.name;
+    this.rate = rate || this.rate;
+    this.lat = lat || this.lat;
+    this.long = long || this.long;
+    this.floors = floors || this.floors;
+    this.location = location || this.location;
+    return this.save();
+  }
+
+  /**
    * Associations for the Tower model
    * @param {*} models 
    */

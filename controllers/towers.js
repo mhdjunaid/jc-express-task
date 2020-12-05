@@ -24,6 +24,25 @@ const ctrlTowers = {
             name, rate, lat, long, floors, location
         });
     },
+    async getTower(towerId) {
+        return await models.Tower.findOne({
+            where: {
+                id: towerId
+            }
+        });
+    },
+    async editTower({
+        tower, name, rate, lat, long, floors, location
+    }) {
+        return tower.editTower({
+            name,
+            rate,
+            lat,
+            long,
+            floors,
+            location
+        });
+    },
     async listTowers({
         options, showWithOffices
     }) {
@@ -46,7 +65,7 @@ const ctrlTowers = {
             // Try to get from redis catch for this options
             const towerCache = JSON.parse(await get(JSON.stringify(options)));
             if (!towerCache) {
-                const towers =  await models.Tower.listTowers({
+                const towers = await models.Tower.listTowers({
                     options
                 });
                 console.log('Saving tower list in cache');

@@ -21,16 +21,31 @@ else {
 }
 
 router.post('/', authenticate(), async (req, res) => {
-    const { name, lat, long, rate, floors, location } = req.body;
     // invalidate redis cache for listint as tower list is updated
     redisClient.flushall();
-    await towersCtrl.createTower({ name, lat, long, rate, floors, location })
+    await towersCtrl.createTower({ ...req.body })
         .then(data => {
             res.send(data);
         }).catch(err => {
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while creating tower"
+            });
+        });
+});
+
+router.put('/:id', authenticate(), async (req, res) => {
+    // invalidate redis cache for listing as tower list is updated
+    redisClient.flushall();
+    const towerId = req.params.id;
+    req.tower = await towersCtrl.getTower(towerId); // get tower model to be updated
+    await towersCtrl.editTower({ tower: req.tower, ...req.body })
+        .then(data => {
+            res.send(data);
+        }).catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while updating tower"
             });
         });
 });

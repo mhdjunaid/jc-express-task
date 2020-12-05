@@ -1,12 +1,12 @@
 const { Model } = require('sequelize');
 const { models } = require('../../database/models');
 
-const afterCreate = async (office, options) => {
+const updateOffice = async (office, options) => {
   const tower = await office.getTower();
   if (tower) {
-    const offices = tower.officeCount + 1;
+    tower.officeCount += 1;
     await models.Tower.update({
-      officeCount: offices
+      officeCount: tower.officeCount
     }, {
       where: {
         id: tower.id
@@ -36,7 +36,7 @@ class Office extends Model {
     }, {
       sequelize,
       hooks: {
-        afterCreate // Update office count for the tower
+        afterCreate: updateOffice
       },
     });
   }
@@ -53,6 +53,33 @@ class Office extends Model {
     return Office.create({
       name, number, towerId
     });
+  }
+
+  /**
+   * Remove an office 
+   * @param {Number} officeId
+   */
+  static async removeOffice({
+    officeId
+  }) {
+    return Office.destroy({
+      where: {
+        id: officeId
+      }
+    })
+  }
+
+  /**
+   * Edit the current office
+   * @param {Object} params
+   */
+  async editOffice({
+    name, number, towerId
+  }) {
+    this.name = name || this.name;
+    this.number = number || this.number;
+    this.towerId = towerId || this.towerId;
+    return this.save();
   }
 
   /**
