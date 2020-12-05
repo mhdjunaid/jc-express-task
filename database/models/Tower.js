@@ -1,4 +1,24 @@
 const { Model } = require('sequelize');
+const { io } = require('../../lib/socket');
+
+const afterCreate = async (tower) => {
+  // Emit to clients with tower info
+  io.emit('tower', {
+    status: 'created',
+    towerId: tower.id,
+    location: tower.location
+  });
+  return tower;
+};
+
+const afterDestroy = async (tower) => {
+  // Emit to clients with tower info after deleted
+  io.emit('tower', {
+    status: 'removed',
+    location: tower.location
+  });
+  return tower;
+};
 
 class Tower extends Model {
   static init(sequelize, DataTypes) {
@@ -12,6 +32,9 @@ class Tower extends Model {
         validate: {
           notEmpty: true
         }
+      },
+      location: {
+        type: DataTypes.STRING
       },
       rate: {
         type: DataTypes.SMALLINT
@@ -58,7 +81,11 @@ class Tower extends Model {
         default: 0 // Default no of offices to zero
       }
     }, {
-      sequelize
+      sequelize,
+      hooks: {
+        afterCreate, // Notify clients - socket
+        afterDestroy
+      },
     });
   }
 
@@ -70,10 +97,10 @@ class Tower extends Model {
    * @param {Geometry} Long
    */
   static async createTower({
-    name, rate, lat, long, floors
+    name, rate, lat, long, floors, location
   }) {
     return Tower.create({
-      name, rate, lat, long, floors, officeCount:0 
+      name, rate, lat, long, floors, location, officeCount: 0
     });
   }
 
