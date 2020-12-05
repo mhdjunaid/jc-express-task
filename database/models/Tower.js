@@ -1,6 +1,10 @@
 const { Model } = require('sequelize');
 const { io } = require('../../lib/socket');
 
+/**
+ * Emit to clients after creation
+ * @param {Model} tower 
+ */
 const afterCreate = async (tower) => {
   // Emit to clients with tower info
   io.emit('tower', {
@@ -11,10 +15,29 @@ const afterCreate = async (tower) => {
   return tower;
 };
 
-const afterDestroy = async (tower) => {
+/**
+ * Emit to clients after delete
+ * @param {Model} tower 
+ * @param {Object} options 
+ */
+const afterDestroy = async (tower, options) => {
   // Emit to clients with tower info after deleted
   io.emit('tower', {
     status: 'removed',
+    location: tower.location
+  });
+  return tower;
+};
+
+/**
+ * Emit to clients after after
+ * @param {Model} tower 
+ * @param {Object} options 
+ */
+const afterUpdate = async (tower, options) => {
+  // Emit to clients with tower info after update
+  io.emit('tower', {
+    status: 'updated',
     location: tower.location
   });
   return tower;
@@ -83,8 +106,13 @@ class Tower extends Model {
     }, {
       sequelize,
       hooks: {
+        beforeBulkDestroy: function (options) {
+          options.individualHooks = true;
+          return options;
+        },
         afterCreate, // Notify clients - socket
-        afterDestroy
+        afterDestroy,
+        afterUpdate
       },
     });
   }
