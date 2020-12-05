@@ -12,6 +12,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      location: {
+        type: Sequelize.STRING
+      },
       rate: {
         type: Sequelize.SMALLINT
       },

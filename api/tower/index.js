@@ -21,10 +21,10 @@ else {
 }
 
 router.post('/', authenticate(), async (req, res) => {
-    const { name, lat, long, rate, floors } = req.body;
+    const { name, lat, long, rate, floors, location } = req.body;
     // invalidate redis cache for listint as tower list is updated
     redisClient.flushall();
-    await towersCtrl.createTower({ name, lat, long, rate, floors })
+    await towersCtrl.createTower({ name, lat, long, rate, floors, location })
         .then(data => {
             res.send(data);
         }).catch(err => {

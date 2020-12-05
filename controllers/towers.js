@@ -18,10 +18,10 @@ else {
 
 const ctrlTowers = {
     async createTower({
-        name, rate, lat, long, floors
+        name, rate, lat, long, floors, location
     }) {
         return models.Tower.createTower({
-            name, rate, lat, long, floors
+            name, rate, lat, long, floors, location
         });
     },
     async listTowers({
