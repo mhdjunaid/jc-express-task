@@ -1,10 +1,15 @@
 const { Model } = require('sequelize');
 const { models } = require('../../database/models');
 
+/**
+ * After office update
+ * @param {Model} office 
+ * @param {Object} options 
+ */
 const updateOffice = async (office, options) => {
   const tower = await office.getTower();
   if (tower) {
-    tower.officeCount += 1;
+    tower.officeCount += 1; // increment total offices
     await models.Tower.update({
       officeCount: tower.officeCount
     }, {
@@ -16,7 +21,26 @@ const updateOffice = async (office, options) => {
   }
   return office;
 };
-
+/**
+ * After office deletion
+ * @param {Model} office 
+ * @param {Object} options 
+ */
+const afterDestroy = async (office, options) => {
+  const tower = await office.getTower();
+  if (tower) {
+    tower.officeCount -= 1; // decrement total offices
+    await models.Tower.update({
+      officeCount: tower.officeCount
+    }, {
+      where: {
+        id: tower.id
+      },
+      transaction: options.transaction
+    });
+  }
+  return office;
+};
 class Office extends Model {
   static init(sequelize, DataTypes) {
     super.init({
@@ -36,8 +60,13 @@ class Office extends Model {
     }, {
       sequelize,
       hooks: {
-        afterCreate: updateOffice
-      },
+        beforeBulkDestroy: function (options) {
+          options.individualHooks = true;
+          return options;
+        },
+        afterCreate: updateOffice,
+        afterDestroy
+      }
     });
   }
 
@@ -83,9 +112,10 @@ class Office extends Model {
   }
 
   /**
-   * @ignore
+   * Associations
    */
   static associate(models) {
+    // An office with 1-1 relation with tower
     Office.belongsTo(models.Tower, {
       as: 'tower',
       foreignKey: 'towerId'
