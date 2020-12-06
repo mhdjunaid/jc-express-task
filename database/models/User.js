@@ -43,6 +43,21 @@ class User extends Model {
       return ret;
     }
   }
+
+   /**
+   * Creates a new user 
+   * @param {String} email
+   * @param {String} password
+   * @param {String} firstName
+   * @param {String} lastName
+   */
+  static async createUser({
+    email, password, firstName, lastName,
+  }) {
+    return User.create({
+      email, password, first_name: firstName, last_name: lastName
+    });
+  }
 }
 
 module.exports = User;

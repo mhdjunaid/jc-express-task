@@ -40,7 +40,6 @@ test('basic communication', async (done) => {
   cleanup(done);
 });
 
-
 afterAll(async () => {
   await httpServer.close();
 });

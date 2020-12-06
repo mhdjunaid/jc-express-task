@@ -6,7 +6,6 @@ const { JWT_SECRET } = require('../../config');
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    console.log(password);
     const user = await models.User.login({ email, password });
     if (user) {
         // Generate an access token
@@ -19,5 +18,14 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.post('/register', async (req, res) => {
+    const { email, password, lastName, firstName } = req.body;
+    const user = await models.User.create({ email, password, first_name: firstName, last_name: lastName });
+    if (user) {
+        res.send('User created');
+    } else {
+        res.send('User cannot be registered');
+    }
+});
 
 module.exports = router;
