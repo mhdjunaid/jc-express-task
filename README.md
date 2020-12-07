@@ -77,6 +77,14 @@ $ npm test
 ```
 
 ## REST APIs
+#### query params for search and filter for the listing APIs
+
+* `limit` (**optional**) &ndash; Default: 10, a Number representing the total number of items for the given query executed on the page.
+* `offset` (**optional**) &ndash;Default: 0, a Number representing pagination.
+* `order` (**optional**) &ndash; Sort the list by the given param (eg order=location).
+* `c[param]` (**optional**) &ndash; Filter result by query params (c[location]=auh&c[name]=T1)
+* `show_with_offices` (**optional**) &ndash;Default: false, Shows towers with offices if set true.
+
 ### Tower
 - GET: `curl localhost:3041/towers?show_with_offices=false&c[location]=auh&limit=10&offset=0&order=id` //c[field] to search by param
 - POST: `curl --location --request POST 'localhost:3041/towers' \
