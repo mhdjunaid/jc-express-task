@@ -28,7 +28,11 @@ To install and start Redis on MAC
 If it replies “PONG”, then it’s good to go!
 
 # Installation
-After copying the project run to install required dependencies:
+Clone the project 
+```
+$ git clone git@github.com:mhdjunaid/jc-express-task
+$ cd jc-express-task
+```
 ```
 $ npm install
 ```
@@ -72,4 +76,69 @@ Application Test:
 $ npm test
 ```
 
+## REST APIs
+#### query params for search and filter for the listing APIs
+
+* `limit` (**optional**) &ndash; Default: 10, a Number representing the total number of items for the given query executed on the page.
+* `offset` (**optional**) &ndash;Default: 0, a Number representing pagination.
+* `order` (**optional**) &ndash; Sort the list by the given param (eg order=location).
+* `c[param]` (**optional**) &ndash; Filter result by query params (c[location]=auh&c[name]=T1)
+* `show_with_offices` (**optional**) &ndash;Default: false, Shows towers with offices if set true.
+
+### User
+- LOGIN: `curl --location --request POST 'localhost:3041/auth/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email":"test@tes1.com",
+    "password":"123456"
+}'`
+- REGISTER: `curl --location --request POST 'localhost:3041/auth/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email":"test@jc2.com",
+    "password":"1234@oms",
+    "lastName":"qwert",
+    "firstName":"test"
+}'`
+
+JWT Token in response of Login to be provided for any further APIs which requires Auth.
+
+### Tower
+- GET: `curl localhost:3041/towers?show_with_offices=false&c[location]=auh&limit=10&offset=0&order=id` //c[field] to search by param
+- POST: `curl --location --request POST 'localhost:3041/towers' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDczMDgzMzV9.SgrvHrBJUpifOehQFBvHw9GrFyuOWqp6sJOGE79ZRI8' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name":"T1",
+    "location":"auh",
+    "rate":5,
+    "lat":54.382951,
+    "long":24.382951,
+    "floors":5
+}'`
+- PUT: `curl --location --request PUT 'localhost:3041/towers/{towerId}' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
+--header 'Content-Type: application/json' \
+--data-raw '{ "name":"fivestar2345"}'`
+- DELETE: `curl --location --request DELETE 'localhost:3041/towers/{towerId}' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
+--data-raw ''`
+
+### Office
+- GET: `curl localhost:3041/offices?sc[name]=auh&limit=10&offset=0&order=id` //c[field] to search by param
+- POST: `curl --location --request POST 'localhost:3041/offices' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDczMDgzMzV9.SgrvHrBJUpifOehQFBvHw9GrFyuOWqp6sJOGE79ZRI8' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name":"O1",
+    "number":"AUHO1",
+    "towerId":1
+}'`
+- PUT: `curl --location --request PUT 'localhost:3041/offices/{officeId}' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
+--header 'Content-Type: application/json' \
+--data-raw '{ "name":"newoffice"}'`
+- DELETE: `curl --location --request DELETE 'localhost:3041/offices/{officeId}' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
+--data-raw ''`
 
