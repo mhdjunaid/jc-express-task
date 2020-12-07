@@ -116,11 +116,29 @@ JWT Token in response of Login to be provided for any further APIs which require
     "long":24.382951,
     "floors":5
 }'`
-- PUT: `curl --location --request PUT 'localhost:3041/towers/1' \
+- PUT: `curl --location --request PUT 'localhost:3041/towers/{towerId}' \
 --header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
 --header 'Content-Type: application/json' \
 --data-raw '{ "name":"fivestar2345"}'`
-- DELETE: `curl --location --request DELETE 'localhost:3041/towers/2' \
+- DELETE: `curl --location --request DELETE 'localhost:3041/towers/{towerId}' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
+--data-raw ''`
+
+### Office
+- GET: `curl localhost:3041/offices?sc[name]=auh&limit=10&offset=0&order=id` //c[field] to search by param
+- POST: `curl --location --request POST 'localhost:3041/offices' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDczMDgzMzV9.SgrvHrBJUpifOehQFBvHw9GrFyuOWqp6sJOGE79ZRI8' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name":"O1",
+    "number":"AUHO1",
+    "towerId":1
+}'`
+- PUT: `curl --location --request PUT 'localhost:3041/offices/{officeId}' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
+--header 'Content-Type: application/json' \
+--data-raw '{ "name":"newoffice"}'`
+- DELETE: `curl --location --request DELETE 'localhost:3041/offices/{officeId}' \
 --header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
 --data-raw ''`
 
