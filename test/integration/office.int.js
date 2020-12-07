@@ -16,7 +16,7 @@ beforeAll(async () => {
 describe('Office Integration Test', () => {
   it('should return created office!', async () => {
     await request(server)
-      .post("/tower")
+      .post("/towers")
       .send({ name: 'TOffice', location: 'AUH', lat: '54.382951', long: '11.1', floors: 5, rate: 4 })
       .set('Authorization', 'JWT ' + jwtToken)
       .expect(200);
@@ -24,14 +24,14 @@ describe('Office Integration Test', () => {
 
   it('should return one tower created', async () => {
     const response = await request(server)
-      .get("/tower?c[name]=TOffice")
+      .get("/towers?c[name]=TOffice")
       .expect(200);
     const towers = response.body;
     towerId = towers[0].id;
   });
   it('should return create an office in tower', async () => {
     const response = await request(server)
-      .post("/office")
+      .post("/offices")
       .send({ name: 'TOffice', number: 'O123ASD', towerId })
       .set('Authorization', 'JWT ' + jwtToken)
       .expect(200);
@@ -39,14 +39,14 @@ describe('Office Integration Test', () => {
   });
   it('should delete the office', async () => {
     await request(server)
-      .delete(`/office/${officeId}`)
+      .delete(`/offices/${officeId}`)
       .set('Authorization', 'JWT ' + jwtToken)
       .expect(200);
 
   });
   it('should delete the tower', async () => {
     await request(server)
-      .delete(`/tower/${towerId}`)
+      .delete(`/towers/${towerId}`)
       .set('Authorization', 'JWT ' + jwtToken)
       .expect(200);
   });
