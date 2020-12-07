@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const officesCtrl = require('../../controllers/offices');
 const { models } = require('../../database/models');
-const { parseOptionsReq } = require('../../lib/utils');
+const { parseOptionsReq } = require('../../lib/parseUtil');
 const authenticate = require('../../lib/middlewares/authenticate');
 
 router.post('/', authenticate(), async (req, res) => {
