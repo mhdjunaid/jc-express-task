@@ -85,6 +85,24 @@ $ npm test
 * `c[param]` (**optional**) &ndash; Filter result by query params (c[location]=auh&c[name]=T1)
 * `show_with_offices` (**optional**) &ndash;Default: false, Shows towers with offices if set true.
 
+### User
+- LOGIN: `curl --location --request POST 'localhost:3041/auth/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email":"test@tes1.com",
+    "password":"123456"
+}'`
+- REGISTER: `curl --location --request POST 'localhost:3041/auth/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email":"test@jc2.com",
+    "password":"1234@oms",
+    "lastName":"qwert",
+    "firstName":"test"
+}'`
+
+JWT Token in response of Login to be provided for any further APIs which requires Auth.
+
 ### Tower
 - GET: `curl localhost:3041/towers?show_with_offices=false&c[location]=auh&limit=10&offset=0&order=id` //c[field] to search by param
 - POST: `curl --location --request POST 'localhost:3041/towers' \
