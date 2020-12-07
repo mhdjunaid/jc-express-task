@@ -28,7 +28,11 @@ To install and start Redis on MAC
 If it replies “PONG”, then it’s good to go!
 
 # Installation
-After copying the project run to install required dependencies:
+Clone the project 
+```
+$ git clone git@github.com:mhdjunaid/jc-express-task
+$ cd jc-express-task
+```
 ```
 $ npm install
 ```
@@ -72,4 +76,25 @@ Application Test:
 $ npm test
 ```
 
+## REST APIs
+### Tower
+- GET: `curl localhost:3041/towers?show_with_offices=false&c[location]=auh&limit=10&offset=0&order=id` //c[field] to search by param
+- POST: `curl --location --request POST 'localhost:3041/towers' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDczMDgzMzV9.SgrvHrBJUpifOehQFBvHw9GrFyuOWqp6sJOGE79ZRI8' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name":"T1",
+    "location":"auh",
+    "rate":5,
+    "lat":54.382951,
+    "long":24.382951,
+    "floors":5
+}'`
+- PUT: `curl --location --request PUT 'localhost:3041/towers/1' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
+--header 'Content-Type: application/json' \
+--data-raw '{ "name":"fivestar2345"}'`
+- DELETE: `curl --location --request DELETE 'localhost:3041/towers/2' \
+--header 'Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDcxNDAwNzR9.uYuy0QMw0Yum1pdS8kK8HGMtC6dFLtPrMWgPqKgxVFQ' \
+--data-raw ''`
 
