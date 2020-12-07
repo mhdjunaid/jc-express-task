@@ -15,8 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Initialize db
 database.initialize();
 app.use('/auth',authRoute); //for handling authentication
-app.use('/tower',towerRoute); //for handling tower related APIs
-app.use('/office',officeRoute); //for handling tower related APIs
+app.use('/towers',towerRoute); //for handling tower related APIs
+app.use('/offices',officeRoute); //for handling tower related APIs
 
 const { io } = require('./lib/socket');
 const server = http.createServer(app);
